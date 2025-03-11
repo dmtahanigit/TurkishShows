@@ -1,0 +1,43 @@
+{
+  "name": "dinesh_code",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "export": "next build && next export",
+    "deploy": "npm run export && touch out/.nojekyll && gh-pages -d out -t true"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dmtahanigit/TurkishShows.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dmtahanigit/TurkishShows/issues"
+  },
+  "homepage": "https://dmtahanigit.github.io/TurkishShows",
+  "description": "",
+  "dependencies": {
+    "@types/react": "^18.2.0",
+    "autoprefixer": "^10.4.21",
+    "axios": "^1.8.2",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.479.0",
+    "next": "^14.0.0",
+    "postcss": "^8.5.3",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "swr": "^2.3.3",
+    "tailwind-merge": "^3.0.2",
+    "tailwindcss": "^3.3.0",
+    "typescript": "^5.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "22.13.10",
+    "gh-pages": "^6.3.0"
+  }
+}
