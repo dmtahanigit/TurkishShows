@@ -44,11 +44,17 @@ const TVSeriesCard = React.forwardRef<HTMLDivElement, TVSeriesCardProps>(
         {...props}
       >
         <div className="relative h-48 w-full overflow-hidden">
-          <img
-            src={imageUrl}
-            alt={title}
-            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-          />
+          {imageUrl ? (
+            <img
+              src={imageUrl}
+              alt={title}
+              className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+            />
+          ) : (
+            <div className="h-full w-full flex items-center justify-center bg-gray-200">
+              <span className="text-gray-400 text-sm">No image available</span>
+            </div>
+          )}
           <div className="absolute bottom-1 right-1">
             <img
               src="https://www.themoviedb.org/assets/2/v4/logos/v2/blue_square_2-d537fb228cf3ded904ef09b136fe3fec72548ebc1fea3fbbd1ad9e36364db38b.svg"
