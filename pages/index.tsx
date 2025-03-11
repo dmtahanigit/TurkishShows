@@ -3,19 +3,13 @@ import { TVSeriesCard } from '@/components/TVSeriesCard';
 import { Footer } from '@/components/Footer';
 import { Series } from '@/types/series';
 
-const TMDB_ACCESS_TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJiZTY2OWQ4ZTVlNWY4YmFhMWQyNDYxM2JjNjFmNDE3MSIsInN1YiI6IjY1ZWU1ZjE4YzE1YjU1MDE3YmVhODc4YiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.qqXP2VmRrVYVIW9JFh1TBtZQJqHj_sLSBQEGXAHVFtY';
+const TMDB_API_KEY = 'be669d8e5e5f8baa1d24613bc61f4171';
 
 export async function getStaticProps() {
   try {
     const fiveYearsAgo = new Date(new Date().setFullYear(new Date().getFullYear() - 5)).toISOString().split('T')[0];
     const response = await fetch(
-      `https://api.themoviedb.org/3/discover/tv?with_original_language=tr&sort_by=popularity.desc&first_air_date_gte=${fiveYearsAgo}&page=1`,
-      {
-        headers: {
-          'Authorization': `Bearer ${TMDB_ACCESS_TOKEN}`,
-          'Content-Type': 'application/json',
-        },
-      }
+      `https://api.themoviedb.org/3/discover/tv?api_key=${TMDB_API_KEY}&with_original_language=tr&sort_by=popularity.desc&first_air_date_gte=${fiveYearsAgo}&page=1`
     );
 
     if (!response.ok) {
