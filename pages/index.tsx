@@ -5,22 +5,17 @@ import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Footer } from '@/components/Footer';
 import { Series } from '@/types/series';
 
-const TMDB_API_KEY = process.env.NEXT_PUBLIC_TMDB_API_KEY;
+const TMDB_API_KEY = 'be669d8e5e5f8baa1d24613bc61f4171';
 const TMDB_API_BASE_URL = 'https://api.themoviedb.org/3';
 
 export default function Home() {
+  console.log('API Key:', TMDB_API_KEY); // Debug log
   const [turkishSeries, setTurkishSeries] = useState<Series[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchTurkishSeries = async () => {
-      if (!TMDB_API_KEY) {
-        setError('API key is missing. Please check your configuration.');
-        setIsLoading(false);
-        return;
-      }
-
       try {
         const response = await axios.get(`${TMDB_API_BASE_URL}/discover/tv`, {
           params: {
@@ -45,7 +40,14 @@ export default function Home() {
         setTurkishSeries(series);
         setIsLoading(false);
       } catch (error) {
-        console.error('Error fetching Turkish series:', error);
+        console.error('Error fetching Turkish series:', error); // Keep the existing error log
+        if (axios.isAxiosError(error)) {
+          console.error('Axios error details:', {
+            response: error.response?.data,
+            status: error.response?.status,
+            config: error.config
+          });
+        }
         setError('Failed to load Turkish series. Please try again later.');
         setIsLoading(false);
       }
