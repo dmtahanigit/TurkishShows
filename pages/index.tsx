@@ -17,17 +17,19 @@ export default function Home() {
   useEffect(() => {
     const fetchTurkishSeries = async () => {
       try {
-        const response = await axios.get(`${TMDB_API_BASE_URL}/discover/tv`, {
-          params: {
-            api_key: TMDB_API_KEY,
-            with_original_language: 'tr',
-            sort_by: 'popularity.desc',
-            first_air_date_gte: new Date(new Date().setFullYear(new Date().getFullYear() - 5)).toISOString().split('T')[0],
-            page: 1,
-          },
-        });
+        const fiveYearsAgo = new Date(new Date().setFullYear(new Date().getFullYear() - 5)).toISOString().split('T')[0];
+        const url = `${TMDB_API_BASE_URL}/discover/tv?api_key=${TMDB_API_KEY}&with_original_language=tr&sort_by=popularity.desc&first_air_date_gte=${fiveYearsAgo}&page=1`;
+        
+        console.log('Fetching from URL:', url); // Debug log
+        
+        const response = await fetch(url);
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        console.log('API Response:', data); // Debug log
 
-        const series = response.data.results.map((show: any) => ({
+        const series = data.results.map((show: any) => ({
           id: show.id.toString(),
           title: show.name,
           rating: show.vote_average / 2, // TMDB uses a 10-point scale, we're using 5
@@ -39,13 +41,12 @@ export default function Home() {
 
         setTurkishSeries(series);
         setIsLoading(false);
-      } catch (error) {
-        console.error('Error fetching Turkish series:', error); // Keep the existing error log
-        if (axios.isAxiosError(error)) {
-          console.error('Axios error details:', {
-            response: error.response?.data,
-            status: error.response?.status,
-            config: error.config
+      } catch (error: unknown) {
+        console.error('Error fetching Turkish series:', error);
+        if (error instanceof Error) {
+          console.error('Error details:', {
+            message: error.message,
+            stack: error.stack
           });
         }
         setError('Failed to load Turkish series. Please try again later.');
