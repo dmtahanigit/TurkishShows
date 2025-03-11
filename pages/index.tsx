@@ -15,6 +15,12 @@ export default function Home() {
 
   useEffect(() => {
     const fetchTurkishSeries = async () => {
+      if (!TMDB_API_KEY) {
+        setError('API key is missing. Please check your configuration.');
+        setIsLoading(false);
+        return;
+      }
+
       try {
         const response = await axios.get(`${TMDB_API_BASE_URL}/discover/tv`, {
           params: {
@@ -63,11 +69,16 @@ export default function Home() {
             <LoadingSpinner size={48} />
           </div>
         )}
-        {!isLoading && !error && (
+        {!isLoading && !error && turkishSeries.length > 0 && (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {turkishSeries.map((series) => (
               <TVSeriesCard key={series.id} {...series} />
             ))}
+          </div>
+        )}
+        {!isLoading && !error && turkishSeries.length === 0 && (
+          <div className="text-center text-gray-600">
+            No Turkish series found. Please try again later.
           </div>
         )}
         </div>
