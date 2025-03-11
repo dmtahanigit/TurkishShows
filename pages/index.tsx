@@ -5,10 +5,8 @@ import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Footer } from '@/components/Footer';
 import { Series } from '@/types/series';
 
-const TMDB_API_BASE_URL = 'https://api.allorigins.win/raw?url=' + encodeURIComponent('https://api.themoviedb.org/3');
-const TMDB_ACCESS_TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJiZTY2OWQ4ZTVlNWY4YmFhMWQyNDYxM2JjNjFmNDE3MSIsInN1YiI6IjY1ZWU1ZjE4YzE1YjU1MDE3YmVhODc4YiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.qqXP2VmRrVYVIW9JFh1TBtZQJqHj_sLSBQEGXAHVFtY';
-
 export default function Home() {
+  console.log('Rendering Home component'); // Debug log
   const [turkishSeries, setTurkishSeries] = useState<Series[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -16,34 +14,11 @@ export default function Home() {
   useEffect(() => {
     const fetchTurkishSeries = async () => {
       try {
-        const fiveYearsAgo = new Date(new Date().setFullYear(new Date().getFullYear() - 5)).toISOString().split('T')[0];
-        const url = `${TMDB_API_BASE_URL}/discover/tv?with_original_language=tr&sort_by=popularity.desc&first_air_date_gte=${fiveYearsAgo}&page=1`;
-        
-        console.log('Fetching from URL:', url); // Debug log
-        
-        let response = await fetch(url, {
-          headers: {
-            'Authorization': `Bearer ${TMDB_ACCESS_TOKEN}`,
-            'Content-Type': 'application/json',
-          },
-        });
-        
+        console.log('Fetching Turkish series from API route'); // Debug log
+        const response = await fetch('/api/tmdb');
         if (!response.ok) {
-          // Try fallback to direct API call if proxy fails
-          console.log('Proxy failed, trying direct API call');
-          const directUrl = `https://api.themoviedb.org/3/discover/tv?with_original_language=tr&sort_by=popularity.desc&first_air_date_gte=${fiveYearsAgo}&page=1`;
-          response = await fetch(directUrl, {
-            headers: {
-              'Authorization': `Bearer ${TMDB_ACCESS_TOKEN}`,
-              'Content-Type': 'application/json',
-            },
-          });
-          
-          if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-          }
+          throw new Error(`API route error: ${response.status}`);
         }
-        
         const data = await response.json();
         console.log('API Response:', data); // Debug log
 
