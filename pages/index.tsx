@@ -5,11 +5,10 @@ import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Footer } from '@/components/Footer';
 import { Series } from '@/types/series';
 
-const TMDB_API_KEY = 'be669d8e5e5f8baa1d24613bc61f4171';
 const TMDB_API_BASE_URL = 'https://api.themoviedb.org/3';
+const TMDB_ACCESS_TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJiZTY2OWQ4ZTVlNWY4YmFhMWQyNDYxM2JjNjFmNDE3MSIsInN1YiI6IjY1ZWU1ZjE4YzE1YjU1MDE3YmVhODc4YiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.qqXP2VmRrVYVIW9JFh1TBtZQJqHj_sLSBQEGXAHVFtY';
 
 export default function Home() {
-  console.log('API Key:', TMDB_API_KEY); // Debug log
   const [turkishSeries, setTurkishSeries] = useState<Series[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -18,11 +17,16 @@ export default function Home() {
     const fetchTurkishSeries = async () => {
       try {
         const fiveYearsAgo = new Date(new Date().setFullYear(new Date().getFullYear() - 5)).toISOString().split('T')[0];
-        const url = `${TMDB_API_BASE_URL}/discover/tv?api_key=${TMDB_API_KEY}&with_original_language=tr&sort_by=popularity.desc&first_air_date_gte=${fiveYearsAgo}&page=1`;
+        const url = `${TMDB_API_BASE_URL}/discover/tv?with_original_language=tr&sort_by=popularity.desc&first_air_date_gte=${fiveYearsAgo}&page=1`;
         
         console.log('Fetching from URL:', url); // Debug log
         
-        const response = await fetch(url);
+        const response = await fetch(url, {
+          headers: {
+            'Authorization': `Bearer ${TMDB_ACCESS_TOKEN}`,
+            'Content-Type': 'application/json',
+          },
+        });
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
